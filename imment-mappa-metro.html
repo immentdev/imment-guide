@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>La mappa dei percorsi verso l'equity | Imment</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&family=Syne:wght@600;700;800&display=swap');
+
+  :root {
+    --trust-blue: #5195FF;
+    --trust-blue-mid: #234980;
+    --trust-blue-dark: #0E2D54;
+    --magenta: #D30083;
+    --magenta-dark: #9E005C;
+    --magenta-light: #E553B5;
+    --teal: #05D8C8;
+    --teal-dark: #07998B;
+    --yellow: #FADE29;
+    --yellow-dark: #FFBA16;
+    --base: #F3F6F9;
+    --mid: #E8ECF3;
+    --grey: #A9B6C6;
+    --white: #FFFFFF;
+    --heading: 'Syne', 'Inter Tight', sans-serif;
+    --body: 'Inter Tight', sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--base); font-family: var(--body); color: var(--trust-blue-dark); padding: 32px 12px 60px; }
+  .doc { max-width: 900px; margin: 0 auto; background: var(--white); border-radius: 10px; overflow: hidden; box-shadow: 0 4px 28px rgba(14,45,84,0.10); }
+  svg text { font-family: var(--body); }
+
+  header { padding: 24px 44px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--mid); }
+  header svg.wordmark { height: 21px; width: auto; }
+  header .payoff { font-family: var(--heading); font-weight: 600; font-size: 11px; color: var(--trust-blue-mid); text-align: left; }
+
+  /* Hero */
+  .hero { position: relative; padding: 46px 44px 40px; overflow: hidden; background: var(--trust-blue-dark); color: var(--white); }
+  .hero .watermark { position: absolute; top: -34px; right: -36px; width: 210px; height: auto; opacity: 0.07; }
+  .hero-inner { position: relative; z-index: 1; }
+  .hero h1 { font-family: var(--heading); font-weight: 700; font-size: 34px; line-height: 1.18; max-width: 15ch; color: var(--white); text-align: left; }
+  .hero .bar { width: 64px; height: 5px; border-radius: 3px; margin-top: 16px; background: linear-gradient(90deg, var(--teal) 0%, var(--trust-blue) 50%, var(--magenta) 100%); }
+  .hero p.lede { margin-top: 18px; font-size: 15px; color: #C7D4EA; max-width: 56ch; line-height: 1.6; text-align: justify; }
+
+  .stat-row { display: flex; gap: 40px; margin-top: 26px; }
+  .stat { text-align: left; }
+  .stat .num { font-family: var(--heading); font-weight: 800; font-size: 40px; line-height: 1; }
+  .stat .num.teal { color: var(--teal); }
+  .stat .num.blue { color: var(--white); }
+  .stat .lbl { font-size: 12px; color: #C7D4EA; margin-top: 4px; max-width: 16ch; }
+
+  /* Map section */
+  .map-section { margin-top: 40px; background: var(--base); padding: 30px 0 26px; border-top: 1px solid var(--mid); border-bottom: 1px solid var(--mid); }
+  .map-heading { padding: 0 44px; font-family: var(--heading); font-weight: 700; font-size: 15px; color: var(--trust-blue-dark); margin-bottom: 4px; text-align: left; }
+  .map-sub { padding: 0 44px; font-size: 12.5px; color: var(--trust-blue-mid); margin-bottom: 18px; max-width: 60ch; text-align: justify; }
+  .scroll-hint { display: none; padding: 0 44px; font-size: 11px; color: var(--trust-blue-mid); margin-bottom: 8px; font-style: italic; text-align: left; }
+  .map-scroll { overflow-x: auto; padding: 4px 44px 10px; -webkit-overflow-scrolling: touch; }
+  .map-scroll svg { width: 860px; max-width: none; height: auto; display: block; }
+
+  /* Legend */
+  .legend { padding: 6px 44px 0; display: flex; flex-wrap: wrap; gap: 26px 34px; margin-top: 6px; }
+  .legend .grp { min-width: 220px; }
+  .legend .grp-title { font-size: 11px; font-weight: 600; color: var(--trust-blue-mid); margin-bottom: 8px; text-align: left; }
+  .legend .line-item { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--trust-blue-dark); margin-bottom: 6px; text-align: left; }
+  .legend .swatch { width: 18px; height: 3px; border-radius: 2px; flex-shrink: 0; }
+  .legend .icon-item { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--trust-blue-dark); margin-bottom: 8px; text-align: left; }
+  .legend .icon-item svg { flex-shrink: 0; }
+
+  /* Legal note */
+  .legal-note { margin: 30px 44px 0; padding: 16px 20px; background: var(--white); border: 1px solid var(--mid); border-radius: 8px; }
+  .legal-note p { font-size: 12px; color: var(--trust-blue-mid); line-height: 1.5; margin-bottom: 6px; text-align: justify; }
+  .legal-note p:last-child { margin-bottom: 0; }
+  .legal-note b { color: var(--trust-blue-dark); font-weight: 600; }
+
+  /* Takeaway */
+  .takeaway { margin: 26px 44px 0; padding: 22px 24px; background: var(--base); border-radius: 8px; }
+  .takeaway h4 { font-family: var(--heading); font-weight: 700; font-size: 15px; margin-bottom: 14px; text-align: left; color: var(--trust-blue-dark); }
+  .takeaway-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .tcol { background: var(--white); border-radius: 6px; padding: 14px 16px 15px; border-top: 3px solid var(--mid); }
+  .tcol.innov { border-top-color: var(--teal-dark); }
+  .tcol.ord { border-top-color: var(--magenta-dark); }
+  .tcol .tcol-title { display: flex; align-items: center; gap: 7px; font-weight: 700; font-size: 12.5px; margin-bottom: 10px; color: var(--trust-blue-dark); text-align: left; }
+  .tcol ul { list-style: none; }
+  .tcol li { display: flex; align-items: flex-start; gap: 8px; font-size: 12.5px; color: var(--trust-blue-mid); margin-bottom: 7px; line-height: 1.42; text-align: left; }
+  .tcol li:last-child { margin-bottom: 0; }
+  .tcol li svg { flex-shrink: 0; margin-top: 2px; }
+  .takeaway-close { margin-top: 16px; font-size: 13.5px; font-weight: 600; color: var(--trust-blue-dark); text-align: left; }
+
+  @media (max-width: 460px) {
+    .takeaway-grid { grid-template-columns: 1fr; }
+  }
+
+  /* CTA */
+  .cta { margin: 26px 44px 42px; padding: 26px 26px 24px; background: var(--trust-blue-dark); border-radius: 8px; color: var(--white); display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
+  .cta .cta-txt { flex: 1; min-width: 220px; }
+  .cta h4 { font-family: var(--heading); font-weight: 700; font-size: 17px; margin-bottom: 8px; text-align: left; }
+  .cta p { font-size: 13px; color: #C7D4EA; text-align: left; }
+  .cta a.button { display: inline-block; background: var(--yellow); color: var(--trust-blue-dark); font-weight: 700; font-size: 13.5px; padding: 12px 20px; border-radius: 4px; text-decoration: none; white-space: nowrap; text-align: left; }
+
+  footer { padding: 18px 44px 30px; border-top: 1px solid var(--mid); display: flex; align-items: center; gap: 8px; }
+  footer svg { height: 15px; width: auto; }
+  footer span { font-size: 10.5px; color: var(--trust-blue-mid); text-align: left; }
+
+  @media (max-width: 640px) {
+    header, .hero, .map-heading, .map-sub, .scroll-hint, .legend, .legal-note, .takeaway, .cta, footer { padding-left: 20px; padding-right: 20px; }
+    .legal-note, .takeaway, .cta { margin-left: 20px; margin-right: 20px; }
+    .map-scroll { padding-left: 20px; padding-right: 20px; }
+    .hero h1 { font-size: 26px; }
+    .stat-row { gap: 28px; }
+    .stat .num { font-size: 32px; }
+    .scroll-hint { display: block; }
+  }
+</style>
+</head>
+<body>
+<div class="doc">
+
+  <header>
+    <svg class="wordmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 325.98 73.75">
+      <path fill="#234980" d="M98.45,18.44h7.27v36.36h-7.27V18.44Z"/>
+      <path fill="#234980" d="M151.01,54.79v-27.68l-13.56,28.2h-2.6l-13.56-28.2v27.68h-7.27l.05-36.36h10.65l11.43,23.74,11.43-23.74h10.65l.05,36.36h-7.27Z"/>
+      <path fill="#234980" d="M203.57,54.79v-27.68l-13.56,28.2h-2.6l-13.56-28.2v27.68h-7.27l.05-36.36h10.65l11.43,23.74,11.43-23.74h10.65l.05,36.36h-7.27Z"/>
+      <path fill="#234980" d="M226.42,25.08v7.01h19.06v6.54h-19.06v9.5h20.31v6.65h-27.58V18.44h27.58v6.65h-20.31Z"/>
+      <path fill="#234980" d="M286.98,18.44v36.88h-2.6l-22.85-27.11v26.59h-7.27V18.44h8.52l16.93,20.46v-20.46h7.27Z"/>
+      <path fill="#234980" d="M325.98,25.19h-13.4v29.6h-7.27v-29.6h-13.4v-6.75h34.07v6.75Z"/>
+      <path fill="#5195FF" d="M54.26,15.25h-16.9c-1.71,0-3.17-1.09-3.72-2.61l-3.33-9.89c-.51-1.59-2.01-2.75-3.77-2.75-.13,0-.26,0-.38.02C11.45,1.6,0,14.05,0,29.18c0,16.2,13.13,29.33,29.33,29.33h16.91c1.74,0,3.22,1.13,3.75,2.69l3.34,9.92c.55,1.54,2.01,2.63,3.73,2.63.15,0,.3,0,.45-.02,14.67-1.62,26.07-14.05,26.07-29.15,0-16.2-13.13-29.33-29.33-29.33ZM54.26,58.51h-2.33c-1.71,0-3.17-1.08-3.72-2.6l-1.59-4.73c-1.55-4.69-5.97-8.07-11.18-8.07h-6.11c-7.69,0-13.93-6.24-13.93-13.93s6.24-13.93,13.93-13.93h2.34c1.76,0,3.25,1.14,3.76,2.73l1.57,4.66c1.61,4.66,6.03,8.01,11.23,8.01h0s6.02,0,6.02,0c7.69,0,13.93,6.24,13.93,13.93s-6.24,13.93-13.93,13.93Z"/>
+    </svg>
+    <span class="payoff">Startup Capital Engine</span>
+  </header>
+
+  <div class="hero">
+    <svg class="watermark" viewBox="0 0 224.89 198.43" xmlns="http://www.w3.org/2000/svg">
+      <path fill="#FFFFFF" d="M145.98,41.02h-45.46c-4.61,0-8.53-2.92-10.02-7.02l-8.97-26.62c-1.38-4.29-5.4-7.39-10.14-7.39-.35,0-.69.02-1.03.05C30.8,4.31,0,37.81,0,78.5c0,43.58,35.33,78.91,78.91,78.91h45.49c4.69,0,8.67,3.03,10.1,7.23l8.99,26.69c1.47,4.13,5.41,7.09,10.05,7.09.41,0,.81-.02,1.21-.07,39.46-4.36,70.15-37.81,70.15-78.43,0-43.58-35.33-78.91-78.91-78.91ZM145.98,157.41h-6.27c-4.6,0-8.52-2.91-10.01-6.99l-4.29-12.73c-4.17-12.61-16.06-21.71-30.07-21.71h-16.44c-20.7,0-37.48-16.78-37.48-37.48s16.78-37.48,37.48-37.48h6.3c4.73,0,8.73,3.08,10.13,7.34l4.23,12.55c4.32,12.54,16.22,21.54,30.22,21.54h0s16.2,0,16.2,0c20.7,0,37.48,16.78,37.48,37.48s-16.78,37.48-37.48,37.48Z"/>
+    </svg>
+    <div class="hero-inner">
+      <h1>Stesso bisogno, percorsi diversi</h1>
+      <div class="bar"></div>
+      <p class="lede">SFP e SAFE portano allo stesso posto: equity in cambio di valore raccolto oggi. Ma la strada per arrivarci cambia in base a chi sei. Questa è la mappa dei quattro percorsi possibili: quante fermate ti separano dal traguardo.</p>
+
+      <div class="stat-row">
+        <div class="stat">
+          <div class="num teal">4</div>
+          <div class="lbl">percorsi possibili, uno per ogni combinazione forma/status</div>
+        </div>
+        <div class="stat">
+          <div class="num blue">1</div>
+          <div class="lbl">solo traguardo: la conversione in equity</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="map-section">
+    <div class="map-heading">La mappa dei percorsi</div>
+    <div class="map-sub">Ogni linea parte dallo stesso bisogno e arriva allo stesso traguardo. Le linee innovativa vanno dritte a Equity, le linee ordinaria fanno una fermata in più: l'aumento di capitale.</div>
+    <div class="scroll-hint">Scorri orizzontalmente per vedere l'intera mappa.</div>
+    <div class="map-scroll">
+      <svg viewBox="0 0 860 420" xmlns="http://www.w3.org/2000/svg">
+
+        <!-- ROW PATHS (drawn first, underneath every station icon) -->
+        <path d="M90,200 C120,200 120,70 150,70 L260,70 L420,70 C560,70 560,200 700,200" stroke="#05D8C8" stroke-width="3" fill="none"/>
+        <path d="M90,200 C120,200 120,140 150,140 L260,140 L420,140 C560,140 560,200 700,200" stroke="#07998B" stroke-width="3" fill="none"/>
+        <path d="M90,200 C120,200 120,260 150,260 L260,260 L420,260 L560,260 C630,260 630,200 700,200" stroke="#E553B5" stroke-width="3" fill="none"/>
+        <path d="M90,200 C120,200 120,330 150,330 L260,330 L420,330 L560,330 C630,330 630,200 700,200" stroke="#9E005C" stroke-width="3" fill="none"/>
+
+        <!-- Origin -->
+        <rect x="64" y="212" width="52" height="30" rx="5" fill="#FFFFFF"/>
+        <circle cx="90" cy="200" r="7" fill="#0E2D54"/>
+        <text x="90" y="224" text-anchor="middle" font-size="10.5" font-weight="700" fill="#0E2D54">Il tuo</text>
+        <text x="90" y="237" text-anchor="middle" font-size="10.5" font-weight="700" fill="#0E2D54">bisogno</text>
+
+        <!-- ROW 1 label: SRL innovativa -->
+        <rect x="160" y="46" width="10" height="10" rx="2" fill="#05D8C8"/>
+        <text x="176" y="55" font-size="12" font-weight="700" fill="#0E2D54">SRL innovativa</text>
+        <!-- ROW 1 stations -->
+        <circle cx="260" cy="70" r="9" fill="#FFFFFF"/>
+        <circle cx="260" cy="70" r="7" fill="#05D8C8" stroke="#FFFFFF" stroke-width="2"/>
+        <text x="260" y="92" text-anchor="middle" font-size="11" font-weight="700" fill="#0E2D54">SFP</text>
+        <text x="260" y="105" text-anchor="middle" font-size="10" fill="#234980">esteso per legge</text>
+        <circle cx="420" cy="70" r="9" fill="#FFFFFF"/>
+        <circle cx="420" cy="70" r="7" fill="#05D8C8" stroke="#FFFFFF" stroke-width="2"/>
+        <text x="420" y="92" text-anchor="middle" font-size="11" font-weight="700" fill="#0E2D54">SAFE</text>
+        <text x="420" y="105" text-anchor="middle" font-size="10" fill="#234980">nativo</text>
+
+        <!-- ROW 2 label: SPA innovativa -->
+        <rect x="160" y="116" width="10" height="10" rx="2" fill="#07998B"/>
+        <text x="176" y="125" font-size="12" font-weight="700" fill="#0E2D54">SPA innovativa</text>
+        <!-- ROW 2 stations -->
+        <circle cx="260" cy="140" r="9" fill="#FFFFFF"/>
+        <circle cx="260" cy="140" r="7" fill="#07998B" stroke="#FFFFFF" stroke-width="2"/>
+        <text x="260" y="162" text-anchor="middle" font-size="11" font-weight="700" fill="#0E2D54">SFP</text>
+        <text x="260" y="175" text-anchor="middle" font-size="10" fill="#234980">nativo</text>
+        <circle cx="420" cy="140" r="9" fill="#FFFFFF"/>
+        <circle cx="420" cy="140" r="7" fill="#07998B" stroke="#FFFFFF" stroke-width="2"/>
+        <text x="420" y="162" text-anchor="middle" font-size="11" font-weight="700" fill="#0E2D54">SAFE</text>
+        <text x="420" y="175" text-anchor="middle" font-size="10" fill="#234980">nativo</text>
+
+        <!-- ROW 3 label: SRL ordinaria -->
+        <rect x="160" y="236" width="10" height="10" rx="2" fill="#E553B5"/>
+        <text x="176" y="245" font-size="12" font-weight="700" fill="#0E2D54">SRL ordinaria</text>
+        <!-- ROW 3 stations -->
+        <circle cx="260" cy="260" r="9" fill="#FFFFFF"/>
+        <line x1="255" y1="255" x2="265" y2="265" stroke="#A9B6C6" stroke-width="2" stroke-linecap="round"/>
+        <line x1="265" y1="255" x2="255" y2="265" stroke="#A9B6C6" stroke-width="2" stroke-linecap="round"/>
+        <text x="260" y="282" text-anchor="middle" font-size="11" font-weight="700" fill="#8A97AB">SFP</text>
+        <text x="260" y="295" text-anchor="middle" font-size="10" fill="#8A97AB">non disponibile</text>
+        <circle cx="420" cy="260" r="9" fill="#FFFFFF"/>
+        <circle cx="420" cy="260" r="7" fill="#FFFFFF" stroke="#9E005C" stroke-width="2.5"/>
+        <line x1="420" y1="257" x2="420" y2="263" stroke="#9E005C" stroke-width="1.6"/>
+        <line x1="417" y1="260" x2="423" y2="260" stroke="#9E005C" stroke-width="1.6"/>
+        <text x="420" y="282" text-anchor="middle" font-size="11" font-weight="700" fill="#0E2D54">SAFE</text>
+        <text x="420" y="295" text-anchor="middle" font-size="10" fill="#234980">dedicato</text>
+        <circle cx="560" cy="260" r="9" fill="#FFFFFF"/>
+        <rect x="554" y="254" width="12" height="12" rx="2" fill="#E553B5" stroke="#FFFFFF" stroke-width="2" transform="rotate(45 560 260)"/>
+        <text x="560" y="282" text-anchor="middle" font-size="11" font-weight="700" fill="#0E2D54">Aumento</text>
+        <text x="560" y="295" text-anchor="middle" font-size="10" fill="#234980">di capitale</text>
+
+        <!-- ROW 4 label: SPA ordinaria -->
+        <rect x="160" y="306" width="10" height="10" rx="2" fill="#9E005C"/>
+        <text x="176" y="315" font-size="12" font-weight="700" fill="#0E2D54">SPA ordinaria</text>
+        <!-- ROW 4 stations -->
+        <circle cx="260" cy="330" r="9" fill="#FFFFFF"/>
+        <circle cx="260" cy="330" r="7" fill="#9E005C" stroke="#FFFFFF" stroke-width="2"/>
+        <text x="260" y="352" text-anchor="middle" font-size="11" font-weight="700" fill="#0E2D54">SFP</text>
+        <text x="260" y="365" text-anchor="middle" font-size="10" fill="#234980">nativo</text>
+        <circle cx="420" cy="330" r="9" fill="#FFFFFF"/>
+        <circle cx="420" cy="330" r="7" fill="#FFFFFF" stroke="#9E005C" stroke-width="2.5"/>
+        <line x1="420" y1="327" x2="420" y2="333" stroke="#9E005C" stroke-width="1.6"/>
+        <line x1="417" y1="330" x2="423" y2="330" stroke="#9E005C" stroke-width="1.6"/>
+        <text x="420" y="352" text-anchor="middle" font-size="11" font-weight="700" fill="#0E2D54">SAFE</text>
+        <text x="420" y="365" text-anchor="middle" font-size="10" fill="#234980">dedicato</text>
+        <circle cx="560" cy="330" r="9" fill="#FFFFFF"/>
+        <rect x="554" y="324" width="12" height="12" rx="2" fill="#9E005C" stroke="#FFFFFF" stroke-width="2" transform="rotate(45 560 330)"/>
+        <text x="560" y="352" text-anchor="middle" font-size="11" font-weight="700" fill="#0E2D54">Aumento</text>
+        <text x="560" y="365" text-anchor="middle" font-size="10" fill="#234980">di capitale</text>
+
+        <!-- Terminus -->
+        <circle cx="700" cy="200" r="15" fill="#FFFFFF"/>
+        <circle cx="700" cy="200" r="16" fill="none" stroke="#0E2D54" stroke-width="1" opacity="0.35"/>
+        <circle cx="700" cy="200" r="11" fill="#0E2D54" stroke="#FFFFFF" stroke-width="2.5"/>
+        <text x="722" y="196" font-size="15" font-weight="700" fill="#0E2D54">Equity</text>
+        <text x="722" y="212" font-size="10" fill="#234980">stesso traguardo</text>
+      </svg>
+    </div>
+
+    <div class="legend">
+      <div class="grp">
+        <div class="grp-title">Le quattro linee</div>
+        <div class="line-item"><span class="swatch" style="background:#05D8C8"></span>SRL innovativa</div>
+        <div class="line-item"><span class="swatch" style="background:#07998B"></span>SPA innovativa</div>
+        <div class="line-item"><span class="swatch" style="background:#E553B5"></span>SRL ordinaria</div>
+        <div class="line-item"><span class="swatch" style="background:#9E005C"></span>SPA ordinaria</div>
+      </div>
+      <div class="grp">
+        <div class="grp-title">Come leggere le fermate</div>
+        <div class="icon-item">
+          <svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="7" fill="#234980" stroke="#FFFFFF" stroke-width="2"/></svg>
+          Strumento nativo, nessun passaggio in più
+        </div>
+        <div class="icon-item">
+          <svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="7" fill="#FFFFFF" stroke="#234980" stroke-width="2.5"/><line x1="9" y1="6" x2="9" y2="12" stroke="#234980" stroke-width="1.6"/><line x1="6" y1="9" x2="12" y2="9" stroke="#234980" stroke-width="1.6"/></svg>
+          Estensione di legge o architettura dedicata
+        </div>
+        <div class="icon-item">
+          <svg width="18" height="18" viewBox="0 0 18 18"><rect x="4" y="4" width="10" height="10" rx="2" fill="#234980" transform="rotate(45 9 9)"/></svg>
+          Fermata procedurale, es. aumento di capitale
+        </div>
+        <div class="icon-item">
+          <svg width="18" height="18" viewBox="0 0 18 18"><line x1="5" y1="5" x2="13" y2="13" stroke="#A9B6C6" stroke-width="2" stroke-linecap="round"/><line x1="13" y1="5" x2="5" y2="13" stroke="#A9B6C6" stroke-width="2" stroke-linecap="round"/></svg>
+          Nessuna fermata, strumento non disponibile
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="legal-note">
+    <p><b>SFP:</b> art. 2346, co. 6, c.c., istituto nativo per qualunque SPA. Per startup e PMI innovative costituite come SRL è disponibile solo grazie all'estensione del D.L. 179/2012, che altrimenti non spetterebbe loro.</p>
+    <p><b>SAFE:</b> nativo per startup e PMI innovative. Per società ordinarie richiede un'architettura contrattuale dedicata, sviluppata e validata con più notai, applicata caso per caso.</p>
+  </div>
+
+  <div class="takeaway">
+    <h4>Il punto da ricordare</h4>
+    <div class="takeaway-grid">
+      <div class="tcol innov">
+        <div class="tcol-title">
+          <svg width="16" height="16" viewBox="0 0 18 18"><circle cx="9" cy="9" r="7" fill="#07998B"/></svg>
+          Società innovative
+        </div>
+        <ul>
+          <li><svg width="14" height="14" viewBox="0 0 18 18"><circle cx="9" cy="9" r="3" fill="#07998B"/></svg>Conversione diretta in equity</li>
+          <li><svg width="14" height="14" viewBox="0 0 18 18"><circle cx="9" cy="9" r="3" fill="#07998B"/></svg>Quasi automatica, al verificarsi delle condizioni predefinite</li>
+        </ul>
+      </div>
+      <div class="tcol ord">
+        <div class="tcol-title">
+          <svg width="16" height="16" viewBox="0 0 18 18"><rect x="4" y="4" width="10" height="10" rx="2" fill="#9E005C" transform="rotate(45 9 9)"/></svg>
+          Società ordinarie
+        </div>
+        <ul>
+          <li><svg width="14" height="14" viewBox="0 0 18 18"><rect x="5.5" y="5.5" width="7" height="7" rx="1.5" fill="#9E005C" transform="rotate(45 9 9)"/></svg>Diritti patrimoniali, senza qualità di socio</li>
+          <li><svg width="14" height="14" viewBox="0 0 18 18"><rect x="5.5" y="5.5" width="7" height="7" rx="1.5" fill="#9E005C" transform="rotate(45 9 9)"/></svg>Equity solo con un aumento di capitale a pagamento, liberato per compensazione del credito maturato</li>
+        </ul>
+      </div>
+    </div>
+    <p class="takeaway-close">Un passaggio in più, stessa sostanza economica: il traguardo resta lo stesso per tutti.</p>
+  </div>
+
+  <div class="cta">
+    <div class="cta-txt">
+      <h4>Compila la survey</h4>
+      <p>Rispondi a poche domande sulla tua società per capire quale strumento fa per te. Alla fine potrai prenotare una call gratuita per approfondire insieme il tuo caso specifico.</p>
+    </div>
+    <a class="button" href="https://tally.so/r/Bzyo6Y">Compila la survey</a>
+  </div>
+
+  <footer>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 224.89 198.43">
+      <path fill="#5195FF" d="M145.98,41.02h-45.46c-4.61,0-8.53-2.92-10.02-7.02l-8.97-26.62c-1.38-4.29-5.4-7.39-10.14-7.39-.35,0-.69.02-1.03.05C30.8,4.31,0,37.81,0,78.5c0,43.58,35.33,78.91,78.91,78.91h45.49c4.69,0,8.67,3.03,10.1,7.23l8.99,26.69c1.47,4.13,5.41,7.09,10.05,7.09.41,0,.81-.02,1.21-.07,39.46-4.36,70.15-37.81,70.15-78.43,0-43.58-35.33-78.91-78.91-78.91ZM145.98,157.41h-6.27c-4.6,0-8.52-2.91-10.01-6.99l-4.29-12.73c-4.17-12.61-16.06-21.71-30.07-21.71h-16.44c-20.7,0-37.48-16.78-37.48-37.48s16.78-37.48,37.48-37.48h6.3c4.73,0,8.73,3.08,10.13,7.34l4.23,12.55c4.32,12.54,16.22,21.54,30.22,21.54h0s16.2,0,16.2,0c20.7,0,37.48,16.78,37.48,37.48s-16.78,37.48-37.48,37.48Z"/>
+    </svg>
+    <span>IMMENT S.r.l., Startup Capital Engine</span>
+  </footer>
+
+</div>
+</body>
+</html>
