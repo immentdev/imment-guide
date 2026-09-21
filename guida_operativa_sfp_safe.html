@@ -213,6 +213,11 @@
     font-size: 13.5px;
     color: var(--imm-trust-blue-mid);
   }
+  .error-card:last-child {
+    grid-column: 1 / -1;
+    justify-self: center;
+    width: calc(50% - 8px);
+  }
 
   /* Prossimo passo */
   .nextstep {
@@ -248,6 +253,7 @@
     .quick-col:first-child { border-right: none; border-bottom: 1px solid var(--imm-neutral-mid); }
     .audience-grid { grid-template-columns: 1fr; }
     .error-grid { grid-template-columns: 1fr; }
+    .error-card:last-child { width: 100%; }
   }
 </style>
 </head>
@@ -301,7 +307,7 @@
           </div>
           <div class="row">
             <div class="label">Costo di attivazione</div>
-            <div class="value">Superiore, per il passaggio notarile</div>
+            <div class="value">Superiore alla firma: il notaio interviene subito</div>
           </div>
         </div>
         <div class="quick-col">
@@ -317,7 +323,7 @@
           </div>
           <div class="row">
             <div class="label">Costo di attivazione</div>
-            <div class="value">Contenuto, solo redazione del contratto</div>
+            <div class="value">Contenuto alla firma: il notaio interviene alla conversione</div>
           </div>
         </div>
       </div>
@@ -412,14 +418,14 @@
       <div class="step-num">4</div>
       <div class="step-body">
         <h4>Valuta il trade-off prima di firmare qualsiasi cosa</h4>
-        <p>Gli SFP costano di più in fase di attivazione per via del passaggio notarile, ma il Regolamento è pubblico e verificato, un segnale concreto per un investitore che non ha ancora un track record su cui basarsi. Il SAFE costa meno e si negozia condizione per condizione, ma resta un contratto privato, non depositato: funziona quando è la storia della startup, non la forma dello strumento, a rassicurare l'investitore.</p>
+        <p>Gli SFP costano di più per il passaggio notarile, ma il Regolamento è pubblico e verificato: un segnale concreto per un investitore senza track record. Il SAFE è più leggero solo alla firma: non essendo uno strumento tipizzato nel nostro ordinamento, la conversione in equity richiede comunque una delibera di aumento di capitale davanti al notaio. Il passaggio notarile non viene eliminato, viene rimandato al momento della conversione.</p>
       </div>
     </div>
     <div class="step">
       <div class="step-num">5</div>
       <div class="step-body">
         <h4>Attiva l'iter dello strumento scelto</h4>
-        <p>Per gli SFP: delibera assembleare, verbale notarile, iscrizione al registro imprese. Per il SAFE: redazione del contratto e, anche se il notaio non è richiesto alla firma, verifica delle condizioni con un legale o un commercialista prima di firmare.</p>
+        <p>Per gli SFP: delibera assembleare, verbale notarile, iscrizione al registro imprese. Per il SAFE: redazione del contratto e, anche se il notaio non è richiesto alla firma, verifica delle condizioni con un legale o un commercialista. Poiché ogni sottoscrittore avrà sconto e cap diversi, conviene impostare per tempo anche la delibera di aumento di capitale che servirà alla conversione, invece di trovarsela da preparare all'ultimo momento.</p>
       </div>
     </div>
   </div>
@@ -460,6 +466,13 @@
         </div>
         <h4>Scelta guidata dal costo</h4>
         <p>Un SFP più costoso al primo round non è uno spreco, è il prezzo di un segnale che in quel momento serve. Il costo va letto insieme alla fase, non da solo.</p>
+      </div>
+      <div class="error-card">
+        <div class="badge">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 2 16.5 15.5H1.5L9 2Z" stroke="#D30083" stroke-width="1.4" stroke-linejoin="round"/><path d="M9 7.5v3.5" stroke="#D30083" stroke-width="1.4" stroke-linecap="round"/><circle cx="9" cy="13" r="0.8" fill="#D30083"/></svg>
+        </div>
+        <h4>Credere che il SAFE eviti il notaio</h4>
+        <p>Il notaio non entra alla firma, ma interviene alla conversione, con una delibera di aumento di capitale. Se ogni sottoscrittore ha condizioni proprie, quella delibera è più complessa da costruire e va preparata con anticipo, non improvvisata quando la conversione é già partita.</p>
       </div>
     </div>
   </div>
